@@ -19,21 +19,6 @@ export default function Home() {
         >
           Bắt đầu khảo sát
         </Link>
-        
-        <div className="mt-12 flex flex-wrap justify-center gap-6">
-          <div className="clay-card text-center">
-            <div className="text-3xl font-bold text-[#3B82F6]" style={{ fontFamily: 'var(--font-be-vietnam-pro)' }}>10+</div>
-            <div className="text-sm text-[#64748B]">Câu hỏi</div>
-          </div>
-          <div className="clay-card text-center">
-            <div className="text-3xl font-bold text-[#16A34A]" style={{ fontFamily: 'var(--font-be-vietnam-pro)' }}>100</div>
-            <div className="text-sm text-[#64748B]">Điểm tối đa</div>
-          </div>
-          <div className="clay-card text-center">
-            <div className="text-3xl font-bold text-[#D97706]" style={{ fontFamily: 'var(--font-be-vietnam-pro)' }}>AI</div>
-            <div className="text-sm text-[#64748B]">Khuyến nghị</div>
-          </div>
-        </div>
       </main>
     </div>
   );

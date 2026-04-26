@@ -122,7 +122,7 @@ export default function SurveyForm({ onSubmit }: { onSubmit: (responses: Record<
             }}
             disabled={currentQuestion === 0}
             className={`clay-button ${currentQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-            style={{ background: currentQuestion === 0 ? '#94A3B8' : 'linear-gradient(145deg, #64748B, #475569)' }}
+            style={{ background: currentQuestion === 0 ? '#94A3B8' : 'linear-gradient(145deg, #718cb1, #254269)' }}
           >
             ← Trước
           </button>

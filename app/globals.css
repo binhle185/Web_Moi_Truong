@@ -1,126 +1,107 @@
 @import "tailwindcss";
 
-/* Claymorphism Design Tokens */
+/* Claymorphism Tinh Chỉnh - Sắc nét & Hiện đại */
 :root {
-  /* Colors */
-  --color-primary: #33c0d5c6;
-  --color-secondary: #FFFFFF;
-  --color-success: #16A34A;
-  --color-warning: #D97706;
-  --color-danger: #DC2626;
+  /* Colors - Giữ nguyên Palette Ngọc Bích đã tối ưu */
+  --color-primary: #00A896;
   --color-surface: #FFFFFF;
-  --color-text: #1c8e85;
-  --color-text-light: #648b7b;
+  --color-text: #064E40;
   
-  /* Claymorphism specific */
-  --clay-100: #F0F9FF;
-  --clay-200: #E0F2FE;
-  --clay-300: #BAE6FD;
-  --clay-shadow-light: rgba(197, 241, 226, 0.8);
-  --clay-shadow-dark: rgba(83, 230, 193, 0.503);
+  /* Shadows - Giảm Blur và Offset để bớt tính "phồng" */
+  --clay-shadow-light: rgba(255, 255, 255, 0.8);
+  --clay-shadow-dark: rgba(0, 168, 150, 0.15); /* Giảm độ đậm từ 0.25 xuống 0.15 */
   
-  /* Background */
-  --background: #90c7eb;
-  --foreground: #1c8e85;
+  --background: #8ac3be; /* Làm nền sáng hơn một chút để rõ nét hơn */
 }
 
-/* Claymorphism Base Styles */
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--color-text);
   font-family: 'Montserrat', sans-serif;
 }
 
-/* Claymorphism Card - soft, puffy 3D effect */
+/* Clay Card - Giảm độ nổi, tăng tính phẳng */
 .clay-card {
   background: var(--color-surface);
-  border-radius: 24px;
+  border-radius: 20px; /* Bo góc ít hơn một chút để trông gọn hơn */
   box-shadow: 
-    4px 4px 8px var(--clay-shadow-dark),
-    -4px -4px 8px var(--clay-shadow-light);
+    4px 4px 10px var(--clay-shadow-dark),  /* Giảm từ 8px/16px xuống 4px/10px */
+    -4px -4px 10px var(--clay-shadow-light);
+  /* Loại bỏ bớt inner shadow để bớt cảm giác "đất sét" quá đà */
+  border: 1px solid rgba(255, 255, 255, 0.5); 
   padding: 24px;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .clay-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px); /* Bay nhẹ hơn */
   box-shadow: 
-    12px 12px 24px var(--clay-shadow-dark),
-    -12px -12px 24px var(--clay-shadow-light);
+    6px 6px 15px var(--clay-shadow-dark),
+    -6px -6px 15px var(--clay-shadow-light);
 }
 
-/* Claymorphism Button */
+/* Clay Button - Sắc nét và chắc chắn hơn */
 .clay-button {
-  background: linear-gradient(145deg, #4bfff9, #2bd4a1);
-  border-radius: 16px;
+  background: var(--color-primary); /* Chuyển từ gradient sang màu đặc (solid) hoặc gradient cực nhẹ */
+  background: linear-gradient(145deg, #00BFB1, #009688);
+  border-radius: 12px;
   box-shadow: 
-    4px 4px 8px var(--clay-shadow-dark),
-    -4px -4px 8px var(--clay-shadow-light);
+    3px 3px 8px rgba(0, 137, 123, 0.2),
+    -3px -3px 8px rgba(255, 255, 255, 0.6);
   color: white;
   font-weight: 600;
   padding: 12px 24px;
-  transition: all 0.2s ease;
   border: none;
   cursor: pointer;
-}
-
-.clay-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    6px 6px 12px var(--clay-shadow-dark),
-    -6px -6px 12px var(--clay-shadow-light);
+  transition: all 0.2s ease;
 }
 
 .clay-button:active {
-  transform: translateY(0);
-  box-shadow: 
-    2px 2px 4px var(--clay-shadow-dark),
-    -2px -2px 4px var(--clay-shadow-light);
+  transform: scale(0.97);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Claymorphism Input */
+/* Clay Input - Giảm độ lún sâu */
 .clay-input {
-  background: var(--color-surface);
-  border-radius: 16px;
+  background: #F0FBF9;
+  border-radius: 12px;
+  /* Shadow inner mỏng hơn giúp input trông thanh thoát */
   box-shadow: 
-    inset 3px 3px 6px var(--clay-shadow-dark),
-    inset -3px -3px 6px var(--clay-shadow-light);
+    inset 2px 2px 5px var(--clay-shadow-dark),
+    inset -2px -2px 5px var(--clay-shadow-light);
   padding: 12px 16px;
-  border: none;
+  border: 1px solid rgba(0, 168, 150, 0.1);
   outline: none;
-  transition: all 0.2s ease;
+  transition: border 0.3s ease;
 }
 
 .clay-input:focus {
-  box-shadow: 
-    inset 4px 4px 8px var(--clay-shadow-dark),
-    inset -4px -4px 8px var(--clay-shadow-light),
-    0 0 0 3px rgba(59, 193, 246, 0.3);
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
 }
 
-/* Claymorphism Option Button */
+/* Clay Option - Rõ ràng & Tương tác tốt */
 .clay-option {
   background: var(--color-surface);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 
-    4px 4px 8px var(--clay-shadow-dark),
-    -4px -4px 8px var(--clay-shadow-light);
+    3px 3px 8px var(--clay-shadow-dark),
+    -3px -3px 8px var(--clay-shadow-light);
   padding: 16px 20px;
   margin-bottom: 12px;
-  cursor: pointer;
+  border: 1.5px solid transparent;
   transition: all 0.2s ease;
-  border: 2px solid transparent;
 }
 
 .clay-option:hover {
-  transform: scale(1.02);
   border-color: var(--color-primary);
+  background: #F9FFFE;
 }
 
 .clay-option.selected {
-  background: linear-gradient(145deg, #E0F2FE, #BAE6FD);
+  background: #E6FFFA;
   border-color: var(--color-primary);
-  box-shadow: 
-    inset 3px 3px 6px var(--clay-shadow-dark),
-    inset -3px -3px 6px var(--clay-shadow-light);
+  box-shadow: none; /* Khi chọn thì làm phẳng hẳn để tạo sự khác biệt */
+  color: var(--color-primary);
+  font-weight: 600;
 }
