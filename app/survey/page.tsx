@@ -19,16 +19,32 @@ export default function SurveyPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl mb-4">Khảo sát hành động bảo vệ môi trường</h1>
-      <input
-        type="text"
-        placeholder="Nhập ID người dùng"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-        className="mb-4 p-2 border"
-      />
-      <SurveyForm onSubmit={handleSubmit} />
+    <div className="min-h-screen px-4 py-8">
+      <div className="max-w-lg mx-auto">
+        <div className="clay-card mb-6">
+          <h1 className="text-2xl font-bold text-center text-[#1C398E]" style={{ fontFamily: 'var(--font-be-vietnam-pro)' }}>
+            Khảo sát hành động bảo vệ môi trường
+          </h1>
+        </div>
+        
+        <div className="clay-card mb-6">
+          <label className="block text-sm font-medium text-[#1C398E] mb-2">
+            Mã người dùng
+          </label>
+          <input
+            type="text"
+            placeholder="Nhập mã của bạn"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            className="clay-input w-full"
+          />
+          <p className="mt-2 text-xs text-[#64748B]">
+            Nhập mã để lưu kết quả và xem lại sau
+          </p>
+        </div>
+        
+        <SurveyForm onSubmit={handleSubmit} />
+      </div>
     </div>
   );
 }
