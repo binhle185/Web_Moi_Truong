@@ -14,8 +14,23 @@ export default function SurveyPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, responses }),
     });
+
+    if (!res.ok) {
+      return;
+    }
+
     const data = await res.json();
-    router.push(`/result?userId=${userId}`);
+    const params = new URLSearchParams();
+
+    if (data.responseId) {
+      params.set('responseId', data.responseId);
+    }
+
+    if (data.userId) {
+      params.set('userId', data.userId);
+    }
+
+    router.push(`/result?${params.toString()}`);
   };
 
   return (

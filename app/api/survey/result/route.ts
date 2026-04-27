@@ -7,12 +7,32 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    const responseId = searchParams.get('responseId');
 
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+    if (responseId) {
+      const response = await UserResponse.findById(responseId);
+
+      if (!response) {
+        return NextResponse.json({ error: 'No response found' }, { status: 404 });
+      }
+
+      return NextResponse.json({
+        score: response.score,
+        recommendations: response.recommendations,
+        userId: response.userId,
+      });
     }
 
-    const response = await UserResponse.findOne({ userId }).sort({ createdAt: -1 });
+    if (!userId) {
+      return NextResponse.json({ error: 'userId or responseId is required' }, { status: 400 });
+    }
+
+    const normalizedUserId = userId.trim();
+    if (!normalizedUserId) {
+      return NextResponse.json({ error: 'userId cannot be empty' }, { status: 400 });
+    }
+
+    const response = await UserResponse.findOne({ userId: normalizedUserId }).sort({ createdAt: -1 });
 
     if (!response) {
       return NextResponse.json({ error: 'No response found' }, { status: 404 });
@@ -21,6 +41,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       score: response.score,
       recommendations: response.recommendations,
+      userId: response.userId,
     });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to get result' }, { status: 500 });

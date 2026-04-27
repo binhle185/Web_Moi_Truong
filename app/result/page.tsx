@@ -1,20 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ScoreChart from '@/src/components/charts/ScoreChart';
 
-export default function ResultPage() {
+function ResultContent() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const userId = searchParams.get('userId');
+  const responseId = searchParams.get('responseId');
 
   useEffect(() => {
-    if (userId) {
-      fetch(`/api/survey/result?userId=${userId}`)
-        .then(res => res.json())
+    if (responseId || userId) {
+      const query = responseId
+        ? `responseId=${encodeURIComponent(responseId)}`
+        : `userId=${encodeURIComponent(userId as string)}`;
+
+      fetch(`/api/survey/result?${query}`)
+        .then(async (res) => {
+          const data = await res.json();
+          return res.ok ? data : null;
+        })
         .then(data => {
           setResult(data);
           setLoading(false);
@@ -23,7 +31,7 @@ export default function ResultPage() {
     } else {
       setLoading(false);
     }
-  }, [userId]);
+  }, [responseId, userId]);
 
   if (loading) {
     return (
@@ -70,7 +78,9 @@ export default function ResultPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-[#1C398E]" style={{ fontFamily: 'var(--font-be-vietnam-pro)' }}>
             Kết quả khảo sát
           </h1>
-          <p className="text-[#64748B] mt-2">Mã: {userId}</p>
+          <p className="text-[#64748B] mt-2">
+            Mã: {result.userId || 'Khách (không có mã người dùng)'}
+          </p>
         </div>
 
         {/* Score Card */}
@@ -119,5 +129,23 @@ export default function ResultPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="clay-card text-center">
+        <div className="text-2xl text-[#3B82F6]">Đang tải kết quả...</div>
+      </div>
+    </div>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ResultContent />
+    </Suspense>
   );
 }
