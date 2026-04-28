@@ -27,16 +27,12 @@ Hệ thống được xây dựng theo mô hình:
 
 ```
 
-Client (Browser)
-↓
-Next.js (Frontend + API Routes)
-↓
-Serverless Functions (Vercel)
-↓
-MongoDB Atlas (Database)
-↓
-External APIs (AQI / Email / Analytics)
-
+graph TD
+    Client(Browser) --> NextJS(Next.js Frontend + API Routes)
+    NextJS --> Serverless(Serverless Functions - Vercel)
+    Serverless --> MongoDB[(MongoDB Atlas)]
+    Serverless --> ExternalAPIs(AQI / Email / Analytics)
+    Serverless --> WebScraper(Web Scraper / RSS - Chính phủ/Bộ TN&MT)
 ```
 
 ---
@@ -56,22 +52,26 @@ air-quality-score-web/
 │   │   ├── survey/            # Trang khảo sát
 │   │   ├── result/            # Trang kết quả
 │   │   ├── dashboard/         # (Admin / analytics)
+|   |   ├── policies/          # Xem danh sách & nội dung Nghị định  
 │   │
 │   ├── components/            # UI Components
 │   │   ├── common/            # Button, Input, Modal...
 │   │   ├── survey/            # Question, StepForm...
 │   │   ├── charts/            # Biểu đồ (Chart.js/Recharts)
+│   │   ├── policy/            # UI: PolicyCard, PolicyContent, SearchBar...
 │   │
 │   ├── modules/               # Business logic (QUAN TRỌNG)
 │   │   ├── survey/            # Xử lý khảo sát
 │   │   ├── scoring/           # Thuật toán chấm điểm
 │   │   ├── recommendation/    # Gợi ý cá nhân hóa
 │   │   ├── analytics/         # Xử lý dữ liệu lớn
+│   │   ├── policy-reader/     # Xử lý hiển thị & tìm kiếm văn bản
 │   │
 │   ├── services/              # Gọi API / External services
 │   │   ├── api.ts
 │   │   ├── aqi.service.ts
 │   │   ├── email.service.ts
+│   │   ├── policy-reader/     # Xử lý hiển thị & tìm kiếm văn bản
 │   │
 │   ├── lib/                   # Utils / helpers
 │   │   ├── db.ts              # Kết nối MongoDB
@@ -81,6 +81,7 @@ air-quality-score-web/
 │   ├── models/                # Schema MongoDB
 │   │   ├── UserResponse.ts
 │   │   ├── Survey.ts
+│   │   ├── policy-reader/     # Xử lý hiển thị & tìm kiếm văn bản
 │   │
 │   ├── hooks/                 # Custom React Hooks
 │   │
@@ -90,6 +91,9 @@ air-quality-score-web/
 │   ├── survey/
 │   │   ├── submit.ts          # Gửi khảo sát
 │   │   ├── result.ts          # Lấy kết quả
+│   ├── policies/
+│   │   ├── list.ts            # API lấy danh sách bài viết/nghị định
+│   │   └── sync.ts            # API (Cron job) để cập nhật dữ liệu từ web ngoài
 │   │
 │   ├── analytics/
 │   │   ├── summary.ts
@@ -171,6 +175,21 @@ Ví dụ:
 
 ---
 
+### 4.6 Policy Reader Module 
+Đọc dữ liệu: Hiển thị các văn bản pháp luật, Nghị định dưới dạng bài viết dễ đọc.
+
+Tính năng:
+
+Tìm kiếm theo từ khóa (Ví dụ: "Nghị định 08", "Khí thải").
+
+Phân loại theo mức độ quan trọng hoặc ngày ban hành.
+
+Scraper Service: Tự động lấy tiêu đề, tóm tắt và nội dung từ các nguồn uy tín (Cổng thông tin Chính phủ, Bộ TN&MT).
+---
+### 4.7 Analytics Module (Big Data)
+Tổng hợp hành vi và mức độ quan tâm của người dùng đối với các chính sách mới.
+
+
 ## 5. Database Design (MongoDB)
 
 ### Collection: `user_responses`
@@ -190,6 +209,18 @@ Ví dụ:
   "createdAt": "2026-04-22"
 }
 ````
+### Collection: policies 
+```json
+{
+  "_id": "ObjectId",
+  "title": "Nghị định số 08/2022/NĐ-CP",
+  "summary": "Quy định chi tiết một số điều của Luật Bảo vệ môi trường...",
+  "content": "Full text or HTML content...",
+  "sourceUrl": "https://vanban.chinhphu.vn/...",
+  "category": "Nghị định",
+  "publishedAt": "2022-01-10",
+  "tags": ["khí thải", "bảo vệ môi trường"]
+}
 
 ---
 
@@ -207,6 +238,12 @@ Ví dụ:
 ### GET `/api/analytics/summary`
 
 * Dữ liệu tổng hợp
+
+### GET /api/policies/list
+Trả về danh sách nghị định/bài viết (có phân trang).
+
+### POST /api/policies/sync (Admin/Cron)
+Kích hoạt bot để crawl dữ liệu mới từ các nguồn đã cấu hình.
 
 ---
 
@@ -277,6 +314,13 @@ Hệ thống được thiết kế theo hướng:
 * **Phù hợp bài thi sáng tạo**
 * **Có khả năng triển khai thực tế cao**
 
+## 11. Lưu ý câu hỏi 
+Ở câu 10: nếu câu 9 chọn xe máy/ xe ô tô thì mới hiện câu 10 còn đi mấy phương tiện khác thì câu 10 không được hiển thị.
+
+## 12. Lưu ý người dùng
+Vẫn trả về kết quả khảo sát và thu thập dữ liệu khảo sát nếu người dùng không có ID
+
+## 13 Data Freshness: Module Policy cần có cơ chế cache hoặc chạy Cron Job hàng tuần để cập nhật văn bản mới mà không làm chậm hệ thống.
 ---
 
 ```

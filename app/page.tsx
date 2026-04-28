@@ -13,12 +13,20 @@ export default function Home() {
           </p>
         </div>
         
-        <Link 
-          href="/survey" 
-          className="clay-button inline-block text-lg"
-        >
-          Bắt đầu khảo sát
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link 
+            href="/survey" 
+            className="clay-button inline-block text-lg"
+          >
+            Bắt đầu khảo sát
+          </Link>
+          <Link
+            href="/policies"
+            className="clay-button inline-block text-lg bg-[#3B82F6] hover:bg-[#2563EB]"
+          >
+            Đọc thông tư
+          </Link>
+        </div>
       </main>
     </div>
   );
